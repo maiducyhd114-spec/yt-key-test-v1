@@ -12,6 +12,9 @@ PORT = int(os.environ.get("PORT", "5000"))
 DEBUG = bool(int(os.environ.get("DEBUG", "0")))  # set DEBUG=1 for local dev
 
 app = Flask(__name__)
+app = Flask(__name__)
+
+init_db()
 
 def init_db():
     need_seed = not os.path.exists(DB_PATH)
@@ -25,9 +28,6 @@ def init_db():
         conn.commit()
     conn.close()
 
-@app.before_first_request
-def _init():
-    init_db()
 
 @app.get("/api/ping")
 def ping():
