@@ -4,18 +4,17 @@ import os
 
 app = Flask(__name__)
 
-# Danh sách key: SĐT -> link YouTube
+# SĐT -> link YouTube
 KEYS = {
-    "0388486866": "https://m.youtube.com",  
-    # Thêm số khác nếu muốn:
-    # "0962490333": "https://m.youtube.com/watch?v=dQw4w9WgXcQ",
+    "0388486866": "https://m.youtube.com",   # đổi sang video cụ thể nếu muốn
+    # "0962490333": "https://m.youtube.com/watch?v=VIDEO_ID",
 }
 
-@app.route("/")
+@app.route("/")              # <— trang chủ, để kiểm tra nhanh
 def home():
-    return "✅ Server chạy OK. Nhập trực tiếp số điện thoại vào URL, ví dụ: /0388486866"
+    return "✅ Server OK. Dùng: /<sdt>  (ví dụ: /0388486866)"
 
-@app.route("/<sdt>")
+@app.route("/<sdt>")         # <— nhập thẳng số ĐT
 def open_by_phone(sdt: str):
     url = KEYS.get(sdt)
     if not url:
