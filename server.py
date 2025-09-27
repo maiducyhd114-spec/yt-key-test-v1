@@ -1,29 +1,27 @@
 #!/usr/bin/env python3
-"""
-yt-key-test-v1: Mini Flask app để test redirect YouTube bằng key
-"""
-
-from flask import Flask, redirect
+from flask import Flask, redirect, jsonify
+import os
 
 app = Flask(__name__)
 
-# Trang chủ để check server có chạy không
+# Danh sách key: SĐT -> link YouTube
+KEYS = {
+    "0388486866": "https://m.youtube.com",  
+    # Thêm số khác nếu muốn:
+    # "0962490333": "https://m.youtube.com/watch?v=dQw4w9WgXcQ",
+}
+
 @app.route("/")
 def home():
-    return "✅ Server chạy OK - nhập key vào URL để test."
+    return "✅ Server chạy OK. Nhập trực tiếp số điện thoại vào URL, ví dụ: /0388486866"
 
-# Route động nhận key
-@app.route("/<key>")
-def open_key(key):
-    # Ví dụ: preyoutube-0388486866-2709-vf6p
-    if key.lower().startswith("preyoutube"):
-        # TODO: Ở đây bạn có thể map key → link riêng
-        # Tạm thời redirect chung sang YouTube
-        return redirect("https://www.youtube.com")
-    return "❌ Key không hợp lệ!"
+@app.route("/<sdt>")
+def open_by_phone(sdt: str):
+    url = KEYS.get(sdt)
+    if not url:
+        return jsonify(ok=False, reason="SĐT không hợp lệ"), 404
+    return redirect(url, code=302)
 
 if __name__ == "__main__":
-    # Render sẽ tự động chọn cổng qua biến môi trường, nhưng khi chạy local thì mặc định port 5000
-    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
